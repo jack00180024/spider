@@ -1,16 +1,20 @@
+#coding:utf-8
+
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
 
+
 # Create a new instance of the Firefox driver
 driver = webdriver.PhantomJS()
 
 # go to the google home page
-driver.get("https://www.opendaylight.org/")
+driver.get("https://www.baidu.com/")
 
 # the page is ajaxy so the title is originally this:
 print driver.title
+driver.get_screenshot_as_file("%s.png"%driver.title)
 
 # find the element that's name attribute is q (the google search box)
 inputElement = driver.find_element_by_name("q")
