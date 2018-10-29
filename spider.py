@@ -4,8 +4,11 @@ from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait # available since 2.4.0
 from selenium.webdriver.support import expected_conditions as EC # available since 2.26.0
+from selenium.webdriver.common.by import By
 
 
+
+search_keyword = "dota2"
 # Create a new instance of the Firefox driver
 driver = webdriver.PhantomJS()
 
@@ -13,24 +16,41 @@ driver = webdriver.PhantomJS()
 driver.get("https://www.baidu.com/")
 
 # the page is ajaxy so the title is originally this:
-print driver.title
+# print(type(driver.title))
+# import chardet
+# print chardet.detect(driver.title)
+# print driver.title.encode("utf-8")
 driver.get_screenshot_as_file("%s.png"%driver.title)
 
+
+
 # find the element that's name attribute is q (the google search box)
-inputElement = driver.find_element_by_name("q")
+inputElement = driver.find_element_by_id("kw")
 
 # type in the search
-inputElement.send_keys("cheese!")
-
+inputElement.send_keys(search_keyword.decode("utf-8"))
 # submit the form (although google automatically searches now without submitting)
 inputElement.submit()
 
+WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "nums_text")))
+# import time
+# time.sleep(3)
+
+# confirmButton = driver.find_element_by_id("su")
+# confirmButton.click()
+
+
+driver.get_screenshot_as_file("keyword.png")
+
 try:
         # we have to wait for the page to refresh, the last thing that seems to be updated is the title
-        WebDriverWait(driver, 10).until(EC.title_contains("cheese!"))
+        WebDriverWait(driver, 10).until(EC.title_contains(search_keyword.decode("utf-8")))
 
         # You should see "cheese! - Google Search"
-        print driver.title
-
+        # print driver.title.encode("utf-8")
+        
+        
+        driver.get_screenshot_as_file("search result.png")
+        
 finally:
         driver.quit()
